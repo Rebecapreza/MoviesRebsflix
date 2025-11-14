@@ -1,0 +1,156 @@
+/* --- 1. CONTÊINER PRINCIPAL (NOVO) --- */
+.carrossel {
+    /* 🚨 MUDANÇA CRÍTICA: Agora o carrossel é o contêiner Flexbox que alinha tudo */
+    position: relative;
+    width: 100%;
+    /* Altura total do carrossel e setas */
+    height: 80vh; 
+    
+    display: flex; /* Habilita Flexbox */
+    justify-content: center; /* Centraliza horizontalmente o conteúdo (imagem + setas) */
+    align-items: center;
+    overflow: hidden;
+}
+
+/* --- 2. CONTÊINER DA IMAGEM --- */
+.carrosselContainer {
+    /* É o contêiner da imagem. Não deve ter position: relative, pois as setas não estarão mais dentro dele. */
+    /* Removido position: relative e overflow: hidden do carrosselContainer */
+    width: 75%;
+    max-width: 900px;
+    border-radius: 12px;
+    /* Adicionamos overflow e box-shadow de volta aqui, mas o position: relative foi removido para que as setas não fiquem presas a ele. */
+    overflow: hidden; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    /* Garante que o container da imagem não encolha */
+    flex-shrink: 0; 
+}
+
+.carrosselImagem {
+    position: relative; /* Mantém relative para posicionar o título (carrosselTitulo) */
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.carrosselImagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.4s ease;
+}
+
+.carrosselImagem:hover img {
+    transform: scale(1.02);
+}
+
+.carrosselTitulo {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* --- 3. BOTÕES DE CONTROLE (Setas) --- */
+.carrosselControle {
+    /* A CRÍTICA: As setas AGORA estão posicionadas em relação ao contêiner .carrossel (item 1) */
+    position: absolute; 
+    top: 50%;
+    transform: translateY(-50%);
+
+    /* Estilos Visuais */
+    background: #DE467C;
+    border: none;
+    border-radius: 50%;
+    width: 50px; /* Aumentei levemente para combinar com o novo visual que você me mostrou */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff; /* Ícone escuro para contraste */
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.carrosselControle:hover {
+    background: #FF69B4;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carrosselControleEsquerda {
+    /* Movido para a esquerda da imagem. Subtrai a metade da largura da seta (25px) da margem (10px). */
+    left: calc(50% - 500px - 55px); 
+}
+
+.carrosselControleDireita {
+    /* Movido para a direita da imagem. */
+    right: calc(50% - 500px - 55px); 
+}
+
+/* --- Indicadores (bolinhas) --- */
+.carrosselIndicadores {
+    /* Mantido fora, mas centralizado */
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10; 
+}
+
+.carrosselIndicador {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carrosselIndicador.ativo {
+    background-color: #DE467C;
+}
+
+/* Media queries para telas menores */
+@media (max-width: 1100px) {
+    /* Ajusta a posição das setas para telas menores onde a largura máxima ainda permite */
+    .carrosselControleEsquerda {
+        left: 5%;
+    }
+    .carrosselControleDireita {
+        right: 5%;
+    }
+}
+
+@media (max-width: 768px) {
+    .carrosselContainer {
+        width: 90%;
+    }
+
+    .carrosselTitulo {
+        font-size: 1.4rem;
+    }
+
+    .carrosselControle {
+        width: 38px;
+        height: 38px;
+    }
+    /* Setas voltam a ficar sobre a imagem em telas muito pequenas para economizar espaço */
+    .carrosselControleEsquerda {
+        left: 10px;
+    }
+
+    .carrosselControleDireita {
+        right: 10px;
+    }
+}

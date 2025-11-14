@@ -1,0 +1,120 @@
+/* Estilo da barra lateral recolhida e com transição */
+.sidebar {
+  width: 80px; 
+  background-color: #1c2a3a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  border-radius: 0 20px 20px 0;
+  
+  /* Transição para a expansão da largura */
+  transition: width 0.3s ease;
+  
+  overflow: hidden; 
+  height: 100vh; 
+}
+
+/* ESTADO EXPANDIDO: Quando o mouse passa por cima */
+.sidebar:hover {
+  width: 280px; 
+  align-items: stretch; /* Permite que os links preencham a largura */
+}
+
+/* --- Título (Logo) --- */
+
+.logo-expanded {
+  margin-bottom: 30px;
+  align-self: flex-start; 
+  padding: 0 20px; 
+  display: flex; /* Adicionado para garantir alinhamento horizontal */
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px; 
+}
+
+.logo-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  cursor: pointer;
+  flex-shrink: 0; 
+}
+
+/* Animar o logo de texto */
+.logo-text {
+    width: 180px; /* Largura total (visível, mas escondida pelo overflow) */
+    height: 80px; 
+    object-fit: contain;
+    opacity: 0;
+    flex-shrink: 0; 
+    /* Usando transform para esconder e mostrar o texto com mais certeza */
+    transform: translateX(-10px); 
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* TÍTULO DO LOGO VISÍVEL NO HOVER */
+.sidebar:hover .logo-text {
+    transform: translateX(0); 
+    opacity: 1;
+    transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s; 
+}
+
+/* --- Menu de Navegação --- */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; 
+  width: 100%; 
+}
+
+.menu a { 
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+    padding: 10px 20px; 
+    text-decoration: none;
+    color: #DE467C; /* Cor padrão dos ícones */
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.menu a:hover {
+    transform: none; 
+    background-color: #253B4F; 
+    color: #FF69B4;
+}
+
+/* ÍCONE GRANDE (24px) */
+.menu-icon {
+    flex-shrink: 0;
+    font-size: 30px; 
+    color: #DE467C; 
+}
+
+
+/* CORREÇÃO FINAL DE VISIBILIDADE DO TEXTO */
+.menu-text {
+    color: white; 
+    font-size: 1rem;
+    
+    /* Largura total do texto, mas com opacidade zero e levemente empurrado */
+    width: 150px; /* Dá espaço suficiente para o texto */
+    opacity: 0;
+    white-space: nowrap; 
+    flex-shrink: 0;
+    transform: translateX(-10px); /* Move levemente para a esquerda */
+    
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* TEXTO VISÍVEL NO HOVER */
+.sidebar:hover .menu-text {
+    transform: translateX(0); /* Volta o texto para a posição correta */
+    opacity: 1;
+    transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}

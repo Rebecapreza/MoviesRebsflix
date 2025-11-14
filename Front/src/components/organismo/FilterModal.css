@@ -1,0 +1,174 @@
+/* src/components/organismo/FilterModal.css */
+
+/* Overlay escuro */
+.filtro-overlay {
+  position: fixed; /* Fixar o overlay */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* Mais escuro */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal container */
+.filtro-modal {
+  /* Mantendo o gradiente adaptado para as cores Rebsflix */
+  background: linear-gradient(180deg, #1c2a3a 0%, #0A141D 100%); 
+  color: #fff;
+  width: 90%;
+  max-width: 600px;
+  padding: 40px;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+  animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Botão de fechar */
+.filtro-fechar {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: #DE467C; /* Pink Principal */
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.filtro-fechar:hover {
+    color: #FF69B4; /* Hover Pink */
+}
+
+.filtro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* Aumentado o espaçamento geral do formulário */
+  margin-top: 10px;
+}
+
+/* Título */
+.filtro-titulo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Checkboxes - Gêneros */
+.filtro-generos {
+  display: grid;
+  /* Ajuste para 4 colunas em telas maiores, ou 2 em pequenas */
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.checkbox-input {
+  /* Cor de destaque do checkbox */
+  accent-color: #DE467C; 
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Campos de Input/Select */
+.filtro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filtro-campo label {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #a0a0a0; 
+}
+
+/* Estilo unificado para inputs e selects */
+.filtro-campo input,
+.filtro-campo select {
+  border: none;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 1rem;
+  background-color: #253B4F; /* Cor de Input Rebsflix */
+  color: white; 
+  outline: none;
+  /* Melhorar a visualização da seta do select em dark mode */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23DE467C'%3E%3Cpath d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
+  padding-right: 30px; /* Espaço para a seta customizada */
+  cursor: pointer;
+}
+
+.filtro-campo input:focus,
+.filtro-campo select:focus {
+    box-shadow: 0 0 0 2px #DE467C;
+}
+
+.filtro-campo input::placeholder {
+  color: #a0a0a0;
+}
+
+/* Botão */
+.filtro-botoes {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-aplicar {
+  background-color: #DE467C; /* Pink Principal */
+  color: white; 
+  border: none;
+  border-radius: 5px; 
+  padding: 15px 30px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: opacity 0.3s;
+}
+
+.btn-aplicar:hover {
+  opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 450px) {
+    .filtro-modal {
+        padding: 30px 20px;
+    }
+    .filtro-generos {
+        /* Quebra para 2 colunas em telas muito pequenas */
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+}

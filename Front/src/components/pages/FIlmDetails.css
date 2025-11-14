@@ -1,0 +1,174 @@
+.film-details-page {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Permite rolagem da página de detalhes */
+    overflow-x: hidden;
+    color: white;
+}
+
+/* --- 1. SEÇÃO PRINCIPAL (Poster e Informações) --- */
+.main-details-section {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+    align-items: flex-start;
+}
+
+.poster-column {
+    flex-shrink: 0; 
+    width: 350px; /* Largura grande para o poster principal */
+}
+
+.details-poster {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.info-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-title-details {
+    font-size: 2.5rem; 
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: white; 
+}
+
+/* --- Metadados (Livre, Ano, Duração, Gênero) --- */
+.movie-metadata {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    font-size: 0.9rem;
+    color: white; 
+    margin-bottom: 20px;
+    flex-wrap: wrap; 
+}
+
+.movie-metadata .rating-tag {
+    /* Estilo da etiqueta de Classificação Indicativa (verde 'Livre') */
+    background-color: #4CAF50; 
+    color: white;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+
+.movie-metadata .separator {
+    color: #a0a0a0;
+}
+
+/* --- Estrelas --- */
+.movie-rating {
+    color: #FFC107; /* Amarelo para as estrelas */
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.movie-sinopse {
+    font-size: 1rem; 
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.movie-cast-info {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+/* --- Botões de Ação (Ver Trailer, Assistir, Editar) --- */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 40px; 
+}
+
+/* Estilo base para todos os botões de ação */
+.btn-primary-play, .btn-secondary-watch, .btn-edit-film {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px; 
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: opacity 0.3s;
+    text-align: center;
+}
+
+/* Estilos específicos */
+.btn-primary-play {
+    background-color: #DE467C; /* Rosa: Ver Trailer */
+    color: white;
+}
+
+.btn-secondary-watch {
+    background-color: #253B4F; /* Cor de input: Assistir */
+    color: white;
+}
+.btn-edit-film {
+    background-color: #DE467C; /* Rosa: Editar */
+    color: white;
+}
+
+.btn-primary-play:hover, .btn-secondary-watch:hover, .btn-edit-film:hover {
+    opacity: 0.8;
+}
+
+
+/* --- 2. SEÇÃO DE FILMES RELACIONADOS --- */
+.related-movies-section {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.related-movies-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+
+/* --- Responsividade --- */
+@media (max-width: 1024px) {
+    .main-details-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .poster-column {
+        width: 60%; 
+    }
+
+    .info-column {
+        padding: 0 10px;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .poster-column {
+        width: 90%;
+    }
+    
+    .movie-title-details {
+        font-size: 2rem;
+    }
+    
+    .film-details-page {
+        padding: 20px;
+    }
+}

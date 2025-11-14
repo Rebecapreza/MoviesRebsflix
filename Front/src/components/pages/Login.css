@@ -1,0 +1,136 @@
+.login-page {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #0A141D;
+    color: white;
+    overflow: hidden;
+}
+
+/* Painel Esquerdo (Fundo Visual) */
+.login-visual-background {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    position: relative;
+    background-color: #0A141D;
+    padding: 0 0 10% 10%;
+}
+
+.background-circles-css {
+    position: absolute;
+    top: 0.1;
+    left: 0;
+    width: 150%;
+    height: 150%;
+    z-index: 1;
+
+  
+    background-image: url('../../assets/Bolinhas.png');
+    background-size: 90% auto;
+   
+    background-repeat: no-repeat;
+    background-position: 10% 100%;
+    opacity: 1;
+}
+
+/* Estilo para a imagem "REBSFLIX" */
+.app-title-img {
+    width: 500px;
+    height: auto;
+    position: absolute;
+    top: 68%;
+    background-position: 60% 30%;
+    z-index: 10;
+}
+
+
+/* Painel Direito (Formulário de Login) */
+.login-form-container {
+    width: 600px;
+    background-color: #0A141D;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    z-index: 20;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-img-login {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+    object-fit: contain;
+}
+
+.login-form-container h1 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.login-input {
+    padding: 15px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #253B4F;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+.login-input::placeholder {
+    color: #a0a0a0;
+}
+
+.forgot-password {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #DE467C;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.login-button {
+    padding: 15px;
+    background-color: #DE467C;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: opacity 0.3s;
+}
+
+.login-button:hover {
+    opacity: 0.8;
+}
+
+.register-prompt {
+    margin-top: 30px;
+    font-size: 0.9rem;
+}
+
+.register-prompt a {
+    color: #DE467C;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}

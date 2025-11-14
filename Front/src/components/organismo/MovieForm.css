@@ -1,0 +1,151 @@
+.movie-form-page {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    color: white;
+}
+
+.form-card {
+    /* Estilo do cartão principal */
+    background-color: #0A141D; 
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.form-card h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.movie-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-group.row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Estilo base para todos os inputs e textarea */
+.form-input, 
+.form-textarea {
+    flex: 1;
+    padding: 15px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #253B4F; /* Cor dos inputs */
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    outline: none;
+}
+
+.form-input {
+    min-width: 0; /* Importante para flexbox */
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Estilo para o campo Ano, que é mais curto */
+.short-input {
+    max-width: 200px; 
+}
+
+
+/* Wrapper para o Poster/Upload */
+.poster-input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.upload-icon-overlay {
+    position: absolute;
+    right: 15px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    pointer-events: none; 
+}
+
+/* --- SEÇÃO DE AÇÕES (Botões) --- */
+.form-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end; 
+    gap: 15px;
+}
+
+/* Estilo base do Botão de Ação */
+.form-button {
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: opacity 0.3s, background-color 0.3s;
+    text-align: center;
+}
+
+/* 1. Estilo para o botão de CADASTRO */
+.btn-submit-new {
+    background-color: #DE467C;
+    flex: 1; 
+}
+
+/* 2. Estilo para o botão de SALVAR EDIÇÃO */
+.btn-save-edit {
+    background-color: #DE467C; 
+    width: 400px; 
+}
+
+/* 3. Estilo para o botão de EXCLUIR */
+.btn-delete {
+    background-color: #DE467C; 
+    width: 400px; 
+}
+
+.form-button:hover {
+    opacity: 0.8;
+}
+
+.form-actions:only-child .btn-submit-new {
+    width: 100%;
+}
+
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .form-group.row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .short-input {
+        max-width: 100%; 
+    }
+    
+    /* Quebra os botões de ação verticalmente em telas pequenas */
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+    }
+    .btn-save-edit, .btn-delete {
+        width: 100%; /* Fazem os botões ocuparem a largura total */
+    }
+}

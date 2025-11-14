@@ -1,0 +1,26 @@
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #0b121b;
+  color: white;
+  overflow: hidden;
+}
+
+.main-content-wrapper {
+    /* CRÍTICO: Faz o conteúdo principal ocupar todo o espaço restante */
+    flex: 1; 
+    
+    /* Garante que o conteúdo role verticalmente se necessário */
+    overflow-y: auto; 
+    
+    /* Esconde a barra de rolagem (solução mais agressiva) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+/* Chrome/Safari/Edge - Esconde a barra de rolagem vertical no wrapper */
+.main-content-wrapper::-webkit-scrollbar {
+    display: none; 
+    width: 0; 
+    height: 0;
+}

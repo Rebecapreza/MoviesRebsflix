@@ -1,0 +1,210 @@
+.movie-card-wrapper {
+    display: block;
+    width: 170px;
+    height: 280px;
+    border-radius: 8px;
+    overflow: hidden;
+    /* Garante que o conteúdo não vaze */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+    background-color: #0a141d;
+    /* Para o caso da imagem não carregar */
+}
+
+/* 🚨 NOVO: Estilo quando o card tem rank (para acomodar o número grande) */
+.movie-card-wrapper.has-rank {
+    background-color: transparent;
+    /* Remove o fundo para mostrar o rank */
+    box-shadow: none;
+    /* Remove a sombra padrão para o destaque do rank */
+    height: 350px;
+    /* Mais altura para o número do rank */
+    width: 200px;
+    /* Mais largura para o número do rank */
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-left: 20px;
+    /* Espaço para o número 1, 2, 3 */
+}
+
+.movie-card-wrapper.has-rank .movie-poster {
+    /* Ajusta o tamanho da imagem dentro do card com rank */
+    height: 300px;
+    width: 200px;
+    position: absolute;
+    top: 50px;
+    /* Move o poster para baixo, após o rank */
+    left: 40px;
+    /* Empurra o poster para a direita */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.movie-card-wrapper:hover {
+    transform: scale(1.05);
+    /* Efeito de zoom simples */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    /* Fica acima dos cards vizinhos */
+}
+
+.movie-card-wrapper.has-rank:hover {
+    transform: scale(1.02);
+    /* Suaviza o zoom no rank */
+}
+
+.movie-card-wrapper.has-rank:hover .movie-poster {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* 🚨 NOVO: Estilo para o Badge de Rank (O grande número 1, 2, 3) */
+.movie-rank-badge {
+    position: absolute;
+    top: -10px;
+    left: -20px;
+    z-index: 5;
+    /* Garante que fique por cima do poster */
+
+    /* Configurações visuais para o número grande */
+    font-size: 15rem;
+    /* Número bem grande */
+    font-weight: 900;
+    line-height: 1;
+    color: #253B4F;
+    /* Azul escuro semi-transparente para o número */
+
+    /* Efeito para parecer que o número está por baixo */
+    -webkit-text-stroke: 3px #DE467C;
+    /* Borda rosa */
+    color: transparent;
+    /* Torna o preenchimento invisível */
+    opacity: 0.8;
+}
+
+
+.movie-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+    /* Para o efeito de escurecimento */
+}
+
+.movie-card-hover-content {
+    position: absolute;
+    bottom: 0;
+    /* Posiciona na parte inferior do card */
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* Gradiente escuro */
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Alinha o texto à esquerda */
+
+    opacity: 0;
+    /* Inicialmente invisível */
+    transform: translateY(100%);
+    /* Escondido abaixo do card */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    color: white;
+    /* Cor do texto */
+    text-align: left;
+}
+
+.movie-card-wrapper:hover .movie-card-hover-content {
+    opacity: 1;
+    transform: translateY(0);
+    /* Aparece vindo de baixo */
+}
+
+.movie-card-wrapper:hover .movie-poster {
+    opacity: 0.7;
+    /* Escurece o poster no hover */
+}
+
+/* Oculta o hover content quando há rank, pois a imagem já está deslocada */
+.movie-card-wrapper.has-rank .movie-card-hover-content {
+    display: none;
+}
+
+
+.movie-card-hover-content .hover-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.movie-card-hover-content .hover-details {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    margin-bottom: 10px;
+}
+
+.movie-card-hover-content .hover-button {
+    background-color: #DE467C;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.movie-card-hover-content .hover-button:hover {
+    background-color: #c43c68;
+}
+
+/* Responsividade básica (mantida) */
+@media (max-width: 768px) {
+    .movie-card-wrapper {
+        width: 130px;
+        height: 200px;
+    }
+
+    .movie-card-wrapper.has-rank {
+        width: 150px;
+        height: 250px;
+        padding-left: 15px;
+    }
+
+    .movie-rank-badge {
+        font-size: 10rem;
+    }
+
+    .movie-card-wrapper.has-rank .movie-poster {
+        height: 200px;
+        width: 130px;
+        top: 40px;
+        left: 20px;
+    }
+
+    .movie-card-hover-content {
+        padding: 10px;
+    }
+
+    .movie-card-hover-content .hover-title {
+        font-size: 1rem;
+    }
+
+    .movie-card-hover-content .hover-details {
+        font-size: 0.8rem;
+    }
+
+    .movie-card-hover-content .hover-button {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+}
