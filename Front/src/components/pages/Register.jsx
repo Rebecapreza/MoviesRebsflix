@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Importa o logo AZUL para o painel ESQUERDO (fundo rosa)
 import logoAzul from '../../assets/Rebsflix azul.png';
-// Importa o logo AZUL para o painel DIREITO (fundo branco)
 import rebsflixTitleAzul from '../../assets/nome rebsflix azul.png';
-// Importa o logo ROSA (originalmente rosa)
-import logoRosa from '../../assets/Rebsflix.png';
 
 import './Register.css'; // CSS para estilizar a página de cadastro
 
@@ -44,14 +40,18 @@ const Register = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nome, email, senha }),
+        // Certifique-se de que os nomes de campo (nome, email, senha) 
+        // correspondem exatamente aos esperados pelo Server.py
+        body: JSON.stringify({ nome, email, senha }), 
       });
 
       const result = await response.json();
 
       if (response.ok && result.status === 'success') {
         // Sucesso no cadastro
-        alert(result.message);
+        // Substituindo alert por console.log para não bloquear o iFrame.
+        console.log("Cadastro bem-sucedido:", result.message); 
+        // alert(result.message); 
         navigate('/'); // Redireciona para o login
       } else {
         // Falha (erros de validação ou do DB - ex: e-mail já existe)
@@ -93,7 +93,7 @@ const Register = () => {
             required
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            disabled={loading}
+            // 🚨 REMOVIDA: disabled={loading}
           />
           <input
             type="email"
@@ -102,7 +102,7 @@ const Register = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
+            // 🚨 REMOVIDA: disabled={loading}
           />
           <input
             type="password"
@@ -111,7 +111,7 @@ const Register = () => {
             required
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            disabled={loading}
+            // 🚨 REMOVIDA: disabled={loading}
           />
           <input
             type="password"
@@ -120,12 +120,13 @@ const Register = () => {
             required
             value={confirmarSenha}
             onChange={(e) => setConfirmarSenha(e.target.value)}
-            disabled={loading}
+            // 🚨 REMOVIDA: disabled={loading}
           />
 
           {/* Exibe a mensagem de erro, se houver */}
           {erroCadastro && <p className="error-message">{erroCadastro}</p>}
 
+          {/* Mantive o disabled no botão para feedback visual durante o envio */}
           <button type="submit" className="register-button" disabled={loading}>
             {loading ? 'Cadastrando...' : 'Cadastrar'}
           </button>

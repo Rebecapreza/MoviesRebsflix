@@ -13,6 +13,8 @@
     justify-content: center;
     align-items: flex-end;
     position: relative;
+    /* 🚨 ESTABILIDADE: Força o próprio plano de fundo a ser renderizado */
+    transform: translateZ(0); 
 }
 
 /* A classe background-circles-css agora usará a imagem de bolinhas rosa */
@@ -38,8 +40,6 @@
     top: 68%;
     background-position: 60% 30%;
     z-index: 10;
-    /* A imagem .app-title-img precisa ser a AZUL para ter contraste no fundo rosa.
-       Faremos a troca no JSX. */
 }
 
 /* Painel Direito (Formulário de Cadastro) */
@@ -52,6 +52,10 @@
     align-items: center;
     justify-content: center;
     color: #a1a1a1;
+    position: relative; 
+    z-index: 20;
+    /* 🚨 ESTABILIDADE: Garante que o contêiner do formulário tenha seu próprio contexto de renderização */
+    transform: translateZ(0); 
 }
 
 .register-header {
@@ -70,7 +74,7 @@
     font-size: 2rem;
     font-weight: bold;
     margin: 0;
-    color: #253B4F; /* 🚨 NOVO: Cor do título em Azul Escuro */
+    color: #253B4F; 
 }
 
 .register-form {
@@ -78,6 +82,8 @@
     flex-direction: column;
     gap: 15px;
     width: 100%;
+    position: relative;
+    z-index: 30;
 }
 
 /* Campos de Input */
@@ -86,7 +92,13 @@
     border: none;
     border-radius: 5px;
     background-color: #ec81a6; 
-    color: #dadbdc; 
+    
+    /* 🚨 VISIBILIDADE: Corrigido para garantir que o texto apareça */
+    color: #ffffff; 
+    
+    /* 🚨 ESTABILIDADE: Garante que o input seja interativo e acelera a renderização */
+    transform: translateZ(0); 
+    
     font-size: 16px;
     outline: none;
 }
@@ -110,23 +122,23 @@
 }
 
 .register-button:hover {
-    background-color: #3b5066; /* Tom mais claro de Azul Escuro no hover */
+    background-color: #3b5066; 
 }
 
 /* Mensagem de Login */
 .login-prompt {
     margin-top: 30px;
     font-size: 0.9rem;
-    color: #253B4F; /* 🚨 NOVO: Texto em Azul Escuro */
+    color: #253B4F; 
 }
 
 .login-prompt a {
-    color: #253B4F; /* 🚨 NOVO: Link em Azul Escuro */
+    color: #253B4F; 
     text-decoration: none;
     font-weight: bold;
     margin-left: 5px;
 }
 
 .login-prompt a:hover {
-    color: #DE467C; /* 🚨 NOVO: Link hover em Rosa */
+    color: #DE467C; 
 }
