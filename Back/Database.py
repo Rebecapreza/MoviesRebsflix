@@ -10,7 +10,7 @@ class _DatabaseConnection:
             'user': 'root',
             'password': 'root', 
             'host': 'localhost',
-            'database': 'banco_filmes',
+            'database': 'Filmes',
             'raise_on_warnings': True
         }
         try:

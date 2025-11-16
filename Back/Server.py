@@ -31,7 +31,7 @@ class MyAPIHandler(BaseHTTPRequestHandler):
 
     def _get_auth_user(self):
         auth_header = self.headers.get('Authorization')
-        return auth.get_user_from_token(auth_header)
+        return Auth.get_user_from_token(auth_header)
 
     def do_OPTIONS(self):
         self._send_response(204)
@@ -95,7 +95,7 @@ class MyAPIHandler(BaseHTTPRequestHandler):
         # Rota de Logout (não precisa de body)
         if self.path == '/logout':
             auth_header = self.headers.get('Authorization')
-            if auth.handle_logout(auth_header):
+            if Auth.handle_logout(auth_header):
                 self._send_response(200, {'message': 'Logout bem-sucedido'})
             else:
                 self._send_response(400, {'error': 'Token inválido'})
@@ -122,8 +122,7 @@ class MyAPIHandler(BaseHTTPRequestHandler):
 
         if self.path == '/register':
             try:
-                # 🚨 ATENÇÃO: O front-end envia 'senha' ou 'password'? Mantive 'password' conforme a lógica do seu auth.py
-                user = auth.handle_register(data['nome'], data['email'], data['password']) 
+                user = Auth.handle_register(data['nome'], data['email'], data['password']) 
                 if user:
                     self._send_response(201, user)
                 else:
@@ -133,8 +132,7 @@ class MyAPIHandler(BaseHTTPRequestHandler):
 
         elif self.path == '/login':
             try:
-                # 🚨 ATENÇÃO: O front-end envia 'senha' ou 'password'?
-                session = auth.handle_login(data['email'], data['password'])
+                session = Auth.handle_login(data['email'], data['password'])
                 if session:
                     self._send_response(200, session)
                 else:
@@ -147,8 +145,7 @@ class MyAPIHandler(BaseHTTPRequestHandler):
             if not user:
                 self._send_response(401, {'error': 'Não autorizado'})
                 return
-            
-            # id_usuario na sua tabela se chama id_usuario, não id_usuario
+
             filme_id = db.create_filme(data, user['id_usuario']) 
             if filme_id:
                 self._send_response(201, {'id_filme': filme_id, 'status': 'Pendente_Adicao', 'message': 'Filme enviado para aprovação.'})
@@ -159,11 +156,9 @@ class MyAPIHandler(BaseHTTPRequestHandler):
             self._send_response(404, {'error': 'Endpoint não encontrado'})
 
     def do_PUT(self):
-        # 🚨 CRÍTICO: Rota para edição de filme (/filmes/:id)
         filme_id_match = re.match(r'/filmes/(\d+)$', self.path)
         
         if not filme_id_match:
-            # Trata a rota de atualização de perfil aqui (se você tiver uma)
             if self.path == '/perfil':
                 # NOTA: Lógica de atualização de perfil não foi totalmente fornecida no db.py,
                 # mas você pode adicionar db.update_user_profile(user_id, data) aqui.

@@ -42,7 +42,7 @@ const Register = () => {
         },
         // Certifique-se de que os nomes de campo (nome, email, senha) 
         // correspondem exatamente aos esperados pelo Server.py
-        body: JSON.stringify({ nome, email, senha }), 
+        body: JSON.stringify({ nome, email, password: senha }),
       });
 
       const result = await response.json();
