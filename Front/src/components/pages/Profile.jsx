@@ -1,20 +1,18 @@
 // src/components/pages/Profile.jsx
 import React, { useState } from 'react';
 import './Profile.css'; 
-import { FaUserCircle } from 'react-icons/fa'; // Ícone de perfil
+import { FaUserCircle } from 'react-icons/fa'; 
 
 const Profile = () => {
-    // 🚨 1. Estado para os dados do usuário (simulação)
     const [userData, setUserData] = useState({
         nome: 'Rebeca Preza',
         email: 'rebeca.preza@rebsflix.com',
-        senha: '••••••••', // A senha nunca é preenchida, apenas exibida
+        senha: '••••••••', // Placeholder para senha
     });
     
-    // 🚨 2. Estado para controlar se o formulário está em modo de edição
     const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false); // 🚨 NOVO ESTADO
 
-    // Função para atualizar os dados ao digitar
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({
@@ -23,78 +21,69 @@ const Profile = () => {
         });
     };
 
-    // Função executada ao clicar em Salvar
-    const handleSave = (e) => {
+    const handleSave = async (e) => { // 🚨 Tornar async
         e.preventDefault();
-        // 🚨 FUTURO: Aqui você enviará os dados atualizados para o Server.py (rota PUT)
-        console.log("Perfil salvo:", userData);
-        setIsEditing(false); // Volta para o modo de visualização
+        setLoading(true);
+
+        try {
+            const response = await fetch('/perfil', { // 🚨 Requisição PUT
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData), // Envia os dados do formulário
+            });
+            const result = await response.json();
+
+            if (response.ok && result.status === 'success') {
+                alert("Perfil atualizado com sucesso!");
+                setIsEditing(false); // Volta para o modo de visualização
+                // Reseta o campo de senha para o placeholder após o sucesso
+                setUserData(prev => ({ ...prev, senha: '••••••••' })); 
+            } else {
+                alert(`Falha ao salvar: ${result.message}`);
+            }
+        } catch (error) {
+            console.error("Erro de rede:", error);
+            alert("Erro de rede ao tentar salvar o perfil.");
+        } finally {
+            setLoading(false);
+        }
     };
+    
+    // ... (restante do componente)
 
     return (
         <div className="profile-page">
             <div className="profile-card">
-                <FaUserCircle className="profile-icon" />
-                <h1>Meu Perfil</h1>
-
+                {/* ... */}
                 <form onSubmit={handleSave} className="profile-form">
+                    {/* ... (Campos Nome e Email) */}
                     
-                    {/* Campo Nome */}
-                    <div className="form-group">
-                        <label>Nome de Usuário</label>
-                        <input
-                            type="text"
-                            name="nome"
-                            className="profile-input"
-                            value={userData.nome}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    
-                    {/* Campo Email */}
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            className="profile-input"
-                            value={userData.email}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    
-                    {/* Campo Senha (para alteração) */}
+                    {/* Campo Senha */}
                     <div className="form-group">
                         <label>Senha</label>
                         <input
-                            // Usa 'text' apenas para simulação, deve ser 'password' em produção
                             type={isEditing ? 'text' : 'password'} 
                             name="senha"
                             className="profile-input"
                             value={userData.senha}
                             onChange={handleChange}
-                            disabled={!isEditing}
+                            disabled={!isEditing || loading} // 🚨 Adicionado loading
                         />
                     </div>
                     
                     {/* Botões de Ação */}
                     <div className="profile-actions">
-                        {/* Se estiver editando, mostra o botão Salvar */}
                         {isEditing ? (
-                            <button type="submit" className="btn-save">
-                                Salvar
+                            <button type="submit" className="btn-save" disabled={loading}>
+                                {loading ? 'Salvando...' : 'Salvar'}
                             </button>
                         ) : (
-                            // Se NÃO estiver editando, mostra o botão Editar
-                            <button type="button" className="btn-edit" onClick={() => setIsEditing(true)}>
+                            <button type="button" className="btn-edit" onClick={() => setIsEditing(true)} disabled={loading}>
                                 Editar Perfil
                             </button>
                         )}
                         
-                        {/* Botão de Logout */}
-                        <button type="button" className="btn-logout" onClick={() => console.log('Usuário deslogado')}>
+                        <button type="button" className="btn-logout" onClick={() => console.log('Usuário deslogado')} disabled={loading}>
                             Sair
                         </button>
                     </div>
