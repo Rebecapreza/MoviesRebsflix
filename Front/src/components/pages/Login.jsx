@@ -11,42 +11,37 @@ const Login = () => {
   const [erroLogin, setErroLogin] = useState('');  // Estado para mensagens de erro
   const [loading, setLoading] = useState(false); // Estado para gerenciar o carregamento
 
-  const handleLogin = async (e) => { 
-    e.preventDefault();
+ const handleLogin = async (e) => { 
+  e.preventDefault();
+  setLoading(true); 
+  setErroLogin(''); 
 
-    setLoading(true); 
-    setErroLogin(''); 
+  try {
+    const response = await fetch("http://localhost:5000/login", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: usuario, senha: senha }),
+    });
 
-    try {
-      const response = await fetch('/login', { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // CRÍTICO: O backend (Server.py/Auth.py) espera 'password', não 'senha'
-        body: JSON.stringify({ email: usuario, password: senha }), 
-      });
+    const result = await response.json();
 
-      const result = await response.json();
+    if (response.ok) {
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("tipo", result.tipo);
+      localStorage.setItem("id", result.id);
 
-      // CORREÇÃO: O backend retorna o objeto de sessão em caso de sucesso (status 200) e não possui o campo 'status: success'.
-      if (response.ok) { 
-        // Armazena o token para ser usado nas requisições protegidas (Home, CRUD)
-        localStorage.setItem("authToken", result.token); 
-        
-        console.log("Login bem-sucedido:", result); 
-        navigate('/home'); 
-      } else {
-        // Falha na autenticação (erros 400, 401). O backend retorna a mensagem em 'error'.
-        setErroLogin(result.error || 'Email ou senha inválidos.');
-      }
-    } catch (error) {
-      console.error('Erro de rede ou servidor:', error);
-      setErroLogin('Não foi possível conectar ao servidor.');
-    } finally {
-      setLoading(false); 
+      navigate("/home");
+    } else {
+      setErroLogin(result.error || "Email ou senha inválidos.");
     }
-  };
+  } catch (error) {
+    setErroLogin("Não foi possível conectar ao servidor.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-page">

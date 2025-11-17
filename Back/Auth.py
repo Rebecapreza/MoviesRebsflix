@@ -1,84 +1,103 @@
-import secrets # <-- Módulo importado para gerar tokens
-import hashlib
-import Database as db
+import json
+import bcrypt
+import jwt
+import datetime
 
-# Dicionario para os tokens
-sessions = {}
-# Chave para embaralhar
-SALT = b'your_project_salt_CINESTESIA'
+SECRET_KEY = "123456"  # Chave secreta usada para gerar e validar o TOKEN JWT.
 
-def hash_password(password):
-    """Gera o hash da senha usando PBKDF2."""
-    pwd_hash = hashlib.pbkdf2_hmac(
-        'sha256', 
-        password.encode('utf-8'), 
-        SALT, 
-        100000
-    )
-    return pwd_hash.hex()
+class Auth:
+    def __init__(self, database):
+        self.db = database
 
-def verify_password(plain_password, password_from_db):
-    """
-    Compara o hash da senha fornecida com o hash armazenado no DB.
-    (Adaptado do seu código original para usar a função de hash)
-    """
-    # 🚨 NOTA: Como você não usa o hash_password() no handle_register (apenas 'password'), 
-    # eu mantenho a comparação de texto simples por enquanto, 
-    # mas o ideal seria usar: return hash_password(plain_password) == password_from_db
-    return plain_password == password_from_db 
-    # Se você começar a armazenar o hash no DB, use: return hash_password(plain_password) == password_from_db
+    # ---- CRIPTOGRAFAR SENHA (bcrypt) ----
+    def hash_password(self, password):
+        return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-# Cadastro
-def handle_register(nome, email, password):
-    user = db.get_user_by_email(email)
-    if user:
-        return None 
+    # ---- VERIFICAR SENHA (bcrypt) ----
+    def verify_password(self, password, hashed):
+        return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
 
-    # O código original armazenava a senha em texto puro (password), manteremos assim, 
-    # mas o ideal é usar: hashed_pass = hash_password(password)
-    hashed_pass = password 
-
-    tipo_usuario = 'Comum'
-    
-    # 🚨 CRÍTICO: db.create_user deve receber 4 parâmetros (nome, email, senha, tipo_usuario)
-    new_user_id = db.create_user(nome, email, hashed_pass, tipo_usuario)
-    return {'id_usuario': new_user_id, 'email': email}
-
-# Login
-def handle_login(email, password):
-    user = db.get_user_by_email(email)
-
-    # Verifica a senha usando a função de comparação
-    if user and verify_password(password, user['senha']):
-        # Gera o token
-        token = secrets.token_hex(20)
-
-        # Guarda os tokens dos usuarioos
-        sessions[token] = {
-            'id_usuario': user['id_usuario'],
-            'nome': user['nome'],
-            'tipo_usuario': user['tipo_usuario']
+    # ---- GERAR TOKEN JWT ----
+    def generate_token(self, usuario_id, tipo):
+        payload = {
+            "id": usuario_id,
+            "tipo": tipo,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
         }
-        return {'token': token, 'user_type': user['tipo_usuario'], 'nome': user['nome']}
-    else:
-        return None
+        return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-# Verificação do token
-def get_user_from_token(auth_header):
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return None
-    
-    token = auth_header.split(' ')[1]
-    user_data = sessions.get(token)
-    return user_data
+    # ---- LOGIN ----
+    def handle_login(self, body):
+        try:
+            data = json.loads(body)
+            email = data.get("email")
+            senha = data.get("senha")
 
-# Função para sair
-def handle_logout(auth_header):
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return False
-    
-    token = auth_header.split(' ')[1]
-    if token in sessions:
-        del sessions[token]
-        return True
-    return False
+            if not email or not senha:
+                return 400, {"error": "Email e senha são obrigatórios"}
+
+            # ---- LOGIN ADMIN ----
+            admin = self.db.get_admin_by_email(email)
+            if admin:
+                if self.verify_password(senha, admin["senha"]):
+                    token = self.generate_token(admin["id_adm"], "admin")
+                    return 200, {
+                        "message": "Login realizado com sucesso",
+                        "tipo": "admin",
+                        "id": admin["id_adm"],
+                        "token": token
+                    }
+                return 401, {"error": "Senha incorreta"}
+
+            # ---- LOGIN USUÁRIO ----
+            user = self.db.get_user_by_email(email)
+            if user:
+                if self.verify_password(senha, user["senha"]):
+                    token = self.generate_token(user["id_user"], "usuario")
+                    return 200, {
+                        "message": "Login realizado com sucesso",
+                        "tipo": "usuario",
+                        "id": user["id_user"],
+                        "nome": user["nome"],
+                        "token": token
+                    }
+                return 401, {"error": "Senha incorreta"}
+
+            return 404, {"error": "Email não encontrado"}
+
+        except json.JSONDecodeError:
+            return 400, {"error": "JSON inválido"}
+        except Exception as e:
+            return 500, {"error": f"Erro interno: {str(e)}"}
+
+    # ---- CADASTRO ----
+    def handle_register(self, body):
+        try:
+            data = json.loads(body)
+
+            nome = data.get("nome")
+            email = data.get("email")
+            senha = data.get("password")  # <--- O FRONT ENVIA "password"
+
+            if not nome or not email or not senha:
+                return 400, {"error": "Nome, email e senha são obrigatórios"}
+
+            # Verifica se já existe usuário com o email
+            if self.db.get_user_by_email(email):
+                return 409, {"error": "Email já cadastrado"}
+
+            # ---- CRIPTOGRAFAR SENHA ANTES DE SALVAR ----
+            senha_hash = self.hash_password(senha)
+
+            # Criar usuário
+            sucesso = self.db.create_user(nome, email, senha_hash)
+
+            if sucesso:
+                return 201, {"message": "Usuário criado com sucesso!"}
+            else:
+                return 500, {"error": "Erro ao criar usuário"}
+
+        except json.JSONDecodeError:
+            return 400, {"error": "JSON inválido"}
+        except Exception as e:
+            return 500, {"error": f"Erro interno: {str(e)}"}
