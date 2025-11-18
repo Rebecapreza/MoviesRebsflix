@@ -60,7 +60,7 @@ class Database:
             print(f"Erro no create_user: {e}")
             return False
 
-    # ---- CRIAR ADMIN (OPCIONAL) ----
+    # ---- CRIAR ADMIN ----
     def create_admin(self, email, senha_hash):
         try:
             cursor = self.connection.cursor()

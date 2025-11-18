@@ -77,7 +77,7 @@ class Auth:
 
             nome = data.get("nome")
             email = data.get("email")
-            senha = data.get("password")  # <--- O FRONT ENVIA "password"
+            senha = data.get("password") 
 
             if not nome or not email or not senha:
                 return 400, {"error": "Nome, email e senha são obrigatórios"}

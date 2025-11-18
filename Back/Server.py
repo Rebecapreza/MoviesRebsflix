@@ -21,9 +21,7 @@ class Server(BaseHTTPRequestHandler):
 
     def do_POST(self):
 
-        # ========================
-        #        LOGIN
-        # ========================
+         # ---- LOGIN ----
         if self.path == "/login":
             try:
                 content_length = int(self.headers["Content-Length"])
@@ -44,9 +42,7 @@ class Server(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "Erro interno no servidor"}).encode())
                 return
 
-        # ========================
-        #      CADASTRO
-        # ========================
+        # ---- CADASTRO ----
         if self.path == "/register":
             try:
                 content_length = int(self.headers["Content-Length"])
@@ -67,9 +63,6 @@ class Server(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "Erro interno no servidor"}).encode())
                 return
 
-        # ========================
-        #   ROTA NÃO ENCONTRADA
-        # ========================
         self._set_headers(404)
         self.wfile.write(json.dumps({"error": "Rota não encontrada"}).encode())
 
