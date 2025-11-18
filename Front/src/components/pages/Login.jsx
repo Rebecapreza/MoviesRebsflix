@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/Rebsflix.png'; // Assume que este é o ícone rosa
-import rebsflixTitle from '../../assets/nome rebsflix.png'; // Assume que este é o texto rosa
-import './Login.css'; // CSS para estilizar a página de login
+import logo from '../../assets/Rebsflix.png'; 
+import rebsflixTitle from '../../assets/nome rebsflix.png'; 
+import './Login.css'; 
 
 const Login = () => {
   const navigate = useNavigate(); 
@@ -45,13 +45,11 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      {/* Container visual da esquerda (Fundo Escuro) */}
       <div className="login-visual-background">
         <div className="background-circles-css"></div>
         <img src={rebsflixTitle} alt="REBSFLIX" className="app-title-img" />
       </div>
 
-      {/* Container do Formulário de Login (Direita) */}
       <div className="login-form-container">
         <div className="login-header">
           <img src={logo} alt="RebsFlix Logo" className="logo-img-login" />

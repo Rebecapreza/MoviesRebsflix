@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import logoAzul from '../../assets/Rebsflix azul.png';
 import rebsflixTitleAzul from '../../assets/nome rebsflix azul.png';
 
-import './Register.css'; // CSS para estilizar a página de cadastro
+import './Register.css'; 
 
 const Register = () => {
   const navigate = useNavigate(); // Hook para navegação
   const [nome, setNome] = useState(''); // Estado para armazenar o nome de usuário
   const [email, setEmail] = useState(''); // Estado para armazenar o e-mail
   const [senha, setSenha] = useState(''); // Estado para armazenar a senha
-  const [confirmarSenha, setConfirmarSenha] = useState(''); // 🚨 NOVO ESTADO: Confirmar Senha
+  const [confirmarSenha, setConfirmarSenha] = useState(''); 
   const [erroCadastro, setErroCadastro] = useState(''); // Estado para mensagens de erro
   const [loading, setLoading] = useState(false); // Novo estado para simular carregamento
 
   // Função que será chamada quando o formulário for enviado
-  const handleCadastro = async (e) => { // 🚨 Tornada 'async' para usar o fetch
+  const handleCadastro = async (e) => {
     e.preventDefault();
 
     // Validação inicial do lado do cliente
@@ -24,7 +24,6 @@ const Register = () => {
       return;
     }
 
-    // 🚨 Validação de correspondência de senhas
     if (senha !== confirmarSenha) {
       setErroCadastro('As senhas não coincidem.');
       return;
@@ -34,7 +33,6 @@ const Register = () => {
     setErroCadastro(''); // Limpa erros anteriores
 
     try {
-      // 🚨 CONEXÃO REAL COM O BACK-END PYTHON na rota /register
       const response = await fetch('/register', {
         method: 'POST',
         headers: {
@@ -63,7 +61,6 @@ const Register = () => {
       console.error('Erro de rede ou servidor:', error);
       setErroCadastro('Não foi possível conectar ao servidor. Verifique o console.');
     } finally {
-      // 🚨 FINALIZA O LOADING
       setLoading(false);
     }
   };
@@ -93,7 +90,6 @@ const Register = () => {
             required
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            // 🚨 REMOVIDA: disabled={loading}
           />
           <input
             type="email"
@@ -102,7 +98,6 @@ const Register = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            // 🚨 REMOVIDA: disabled={loading}
           />
           <input
             type="password"
@@ -111,7 +106,6 @@ const Register = () => {
             required
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            // 🚨 REMOVIDA: disabled={loading}
           />
           <input
             type="password"
@@ -120,13 +114,11 @@ const Register = () => {
             required
             value={confirmarSenha}
             onChange={(e) => setConfirmarSenha(e.target.value)}
-            // 🚨 REMOVIDA: disabled={loading}
           />
 
           {/* Exibe a mensagem de erro, se houver */}
           {erroCadastro && <p className="error-message">{erroCadastro}</p>}
 
-          {/* Mantive o disabled no botão para feedback visual durante o envio */}
           <button type="submit" className="register-button" disabled={loading}>
             {loading ? 'Cadastrando...' : 'Cadastrar'}
           </button>

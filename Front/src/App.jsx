@@ -33,7 +33,6 @@ function App() {
           path="/filmes/cadastro"
           element={<HomeLayout content={<MovieForm />} />}
         />
-
         <Route
           path="/filmes/edicao/:id"
           element={<HomeLayout content={<MovieForm isEditing={true} />} />}
