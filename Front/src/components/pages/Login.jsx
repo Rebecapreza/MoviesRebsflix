@@ -6,10 +6,10 @@ import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate(); 
-  const [usuario, setUsuario] = useState(''); // Estado para o e-mail/usuário
-  const [senha, setSenha] = useState(''); // Estado para a senha
-  const [erroLogin, setErroLogin] = useState('');  // Estado para mensagens de erro
-  const [loading, setLoading] = useState(false); // Estado para gerenciar o carregamento
+  const [usuario, setUsuario] = useState(''); 
+  const [senha, setSenha] = useState(''); 
+  const [erroLogin, setErroLogin] = useState('');  
+  const [loading, setLoading] = useState(false); 
 
  const handleLogin = async (e) => { 
   e.preventDefault();
@@ -17,7 +17,8 @@ const Login = () => {
   setErroLogin(''); 
 
   try {
-    const response = await fetch("http://localhost:5000/login", { 
+    // 🟢 CORREÇÃO: Usar apenas '/login' para o Proxy do Vite cuidar da porta (8000)
+    const response = await fetch("/api/login", { 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,14 +30,15 @@ const Login = () => {
 
     if (response.ok) {
       localStorage.setItem("token", result.token);
-      localStorage.setItem("tipo", result.tipo);
-      localStorage.setItem("id", result.id);
+      localStorage.setItem("tipo", result.user.tipo); // Ajustado conforme retorno do Server.py
+      localStorage.setItem("email", result.user.email);
 
       navigate("/home");
     } else {
       setErroLogin(result.error || "Email ou senha inválidos.");
     }
   } catch (error) {
+    console.error(error);
     setErroLogin("Não foi possível conectar ao servidor.");
   } finally {
     setLoading(false);
