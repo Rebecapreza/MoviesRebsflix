@@ -13,7 +13,6 @@
     justify-content: center;
     align-items: flex-end;
     position: relative;
-    /* 🚨 ESTABILIDADE: Força o próprio plano de fundo a ser renderizado */
     transform: translateZ(0); 
 }
 
@@ -54,7 +53,6 @@
     color: #a1a1a1;
     position: relative; 
     z-index: 20;
-    /* 🚨 ESTABILIDADE: Garante que o contêiner do formulário tenha seu próprio contexto de renderização */
     transform: translateZ(0); 
 }
 
@@ -92,11 +90,7 @@
     border: none;
     border-radius: 5px;
     background-color: #ec81a6; 
-    
-    /* 🚨 VISIBILIDADE: Corrigido para garantir que o texto apareça */
     color: #ffffff; 
-    
-    /* 🚨 ESTABILIDADE: Garante que o input seja interativo e acelera a renderização */
     transform: translateZ(0); 
     
     font-size: 16px;

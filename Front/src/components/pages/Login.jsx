@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/Rebsflix.png'; // Assume que este é o ícone rosa
-import rebsflixTitle from '../../assets/nome rebsflix.png'; // Assume que este é o texto rosa
-import './Login.css'; // CSS para estilizar a página de login
+import logo from '../../assets/Rebsflix.png'; 
+import rebsflixTitle from '../../assets/nome rebsflix.png'; 
+import './Login.css'; 
 
 const Login = () => {
   const navigate = useNavigate(); 
-  const [usuario, setUsuario] = useState(''); // Estado para o e-mail/usuário
-  const [senha, setSenha] = useState(''); // Estado para a senha
-  const [erroLogin, setErroLogin] = useState('');  // Estado para mensagens de erro
-  const [loading, setLoading] = useState(false); // Estado para gerenciar o carregamento
+  const [usuario, setUsuario] = useState(''); 
+  const [senha, setSenha] = useState(''); 
+  const [erroLogin, setErroLogin] = useState('');  
+  const [loading, setLoading] = useState(false); 
 
+<<<<<<< HEAD
   const handleLogin = async (e) => { 
+=======
+ const handleLogin = async (e) => { 
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
   e.preventDefault();
   setLoading(true); 
   setErroLogin(''); 
 
   try {
+<<<<<<< HEAD
     // 🟢 CORREÇÃO: Adicionado '/api' antes do login
+=======
+    // 🟢 CORREÇÃO: Usar apenas '/login' para o Proxy do Vite cuidar da porta (8000)
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
     const response = await fetch("/api/login", { 
       method: "POST",
       headers: {
@@ -30,11 +38,16 @@ const Login = () => {
 
     if (response.ok) {
       localStorage.setItem("token", result.token);
+<<<<<<< HEAD
       localStorage.setItem("tipo", result.user.tipo);
       localStorage.setItem("email", result.user.email);
       // Se tiver ID no retorno, salve também:
       if(result.user.id) localStorage.setItem("id", result.user.id);
       localStorage.setItem("nome", result.user.nome); 
+=======
+      localStorage.setItem("tipo", result.user.tipo); // Ajustado conforme retorno do Server.py
+      localStorage.setItem("email", result.user.email);
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
 
       navigate("/home");
     } else {
@@ -47,15 +60,17 @@ const Login = () => {
     setLoading(false);
   }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
   return (
     <div className="login-page">
-      {/* Container visual da esquerda (Fundo Escuro) */}
       <div className="login-visual-background">
         <div className="background-circles-css"></div>
         <img src={rebsflixTitle} alt="REBSFLIX" className="app-title-img" />
       </div>
 
-      {/* Container do Formulário de Login (Direita) */}
       <div className="login-form-container">
         <div className="login-header">
           <img src={logo} alt="RebsFlix Logo" className="logo-img-login" />

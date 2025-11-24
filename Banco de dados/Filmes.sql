@@ -467,4 +467,6 @@ INSERT INTO linguagem_filme (id_filme, id_linguagem) VALUES
 (23, 2), -- Como Eu Era Antes de Você (Inglês)
 (24, 2); -- O Sol da Meia Noite (Inglês)
 
+UPDATE filme SET status = 'aprovado';
+
 SELECT * FROM usuarios;

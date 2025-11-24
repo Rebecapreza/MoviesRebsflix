@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+<<<<<<< HEAD
 import { FaPencilAlt } from 'react-icons/fa';
 import './FIlmDetails.css'; 
+=======
+import { FaPencilAlt } from 'react-icons/fa'; // 🟢 Import do ícone de lápis
+import './FIlmDetails.css'; // 🟢 Import do CSS (Atenção: o nome do seu arquivo no sistema está com "FI" maiúsculo)
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
 
 const FilmDetails = () => {
     const { id } = useParams();
@@ -12,6 +17,7 @@ const FilmDetails = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
+<<<<<<< HEAD
                 // 🟢 Verifica no console o ID que está sendo buscado
                 console.log("Buscando filme ID:", id);
 
@@ -43,6 +49,17 @@ const FilmDetails = () => {
                     });
                 } else {
                     setErrorMsg("Filme não encontrado na resposta da API.");
+=======
+                // 🟢 Rota ajustada para o singular, conforme o Back-end
+                const response = await fetch(`/filme/${id}`);
+                const result = await response.json();
+
+                if (response.ok && result.status === 'success') {
+                    setMovie(result.movie);
+                } else {
+                    console.error("Filme não encontrado:", result.message);
+                    setMovie(null);
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
                 }
             } catch (error) {
                 console.error("Erro no fetch:", error);
@@ -51,8 +68,12 @@ const FilmDetails = () => {
                 setLoading(false);
             }
         };
+<<<<<<< HEAD
         
         if (id) fetchDetails();
+=======
+        fetchDetails();
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
     }, [id]);
 
     if (loading) {
@@ -74,6 +95,7 @@ const FilmDetails = () => {
             <div className="main-details-section">
                 {/* Coluna do Poster */}
                 <div className="poster-column">
+<<<<<<< HEAD
                     {movie.poster_url ? (
                         <img 
                             src={movie.poster_url} 
@@ -84,6 +106,13 @@ const FilmDetails = () => {
                     ) : (
                         <div className="details-poster-placeholder">Sem Imagem</div>
                     )}
+=======
+                    <img 
+                        src={movie.poster_url} 
+                        alt={`Pôster de ${movie.titulo}`} 
+                        className="details-poster" 
+                    />
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
                 </div>
 
                 {/* Coluna de Informações */}
@@ -115,8 +144,13 @@ const FilmDetails = () => {
 
                     {/* Informações Técnicas */}
                     <div className="movie-cast-info">
+<<<<<<< HEAD
                         <p><strong>Direção:</strong> {movie.diretor}</p>
                         <p><strong>Elenco Principal:</strong> {movie.atores}</p>
+=======
+                        <p><strong>Direção:</strong> {movie.diretor || "N/A"}</p>
+                        <p><strong>Elenco Principal:</strong> {movie.atores || "N/A"}</p>
+>>>>>>> 4596edb31e8476a55856e6fdae96d4d3651b9f4f
                     </div>
                 </div>
             </div>
