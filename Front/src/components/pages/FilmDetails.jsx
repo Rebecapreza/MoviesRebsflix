@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // 🚨 Importar useState e useEffect
+import React, { useState, useEffect } from 'react'; 
 import { useParams, Link } from 'react-router-dom'; 
 // ... (outros imports)
 
@@ -7,13 +7,13 @@ import { useParams, Link } from 'react-router-dom';
 
 const FilmDetails = () => {
     const { id } = useParams(); 
-    const [movie, setMovie] = useState(null); // 🚨 NOVO ESTADO: Dados do filme
+    const [movie, setMovie] = useState(null); 
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const response = await fetch(`/filme/${id}`); // 🚨 Chamada real ao backend
+                const response = await fetch(`/Filmes/${id}`); 
                 const result = await response.json();
                 
                 if (response.ok && result.status === 'success') {

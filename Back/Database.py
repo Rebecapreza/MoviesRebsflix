@@ -14,7 +14,7 @@ class Database:
                 host="localhost",
                 user="root",
                 password="root",
-                database="Filmes"
+                database="filmes"
             )
             if self.connection.is_connected():
                 print("Conectado ao MySQL com sucesso.")

@@ -13,9 +13,7 @@ class Server(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
-        # 🚨 ATUALIZADO: Permitir PUT e DELETE
         self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE") 
-        # 🚨 ATUALIZADO: Permitir header Authorization
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.end_headers()
 

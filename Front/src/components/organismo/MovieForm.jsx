@@ -61,7 +61,7 @@ const MovieForm = ({ isEditing = false }) => {
         });
     };
 
-    const handleSubmit = async (e) => { // 🚨 Tornar async
+    const handleSubmit = async (e) => { 
         e.preventDefault();
         setLoading(true);
 
@@ -90,7 +90,7 @@ const MovieForm = ({ isEditing = false }) => {
         }
     };
     
-    const handleDelete = async (e) => { // 🚨 Tornar async
+    const handleDelete = async (e) => { 
         e.preventDefault();
         if (!window.confirm(`Tem certeza que deseja excluir o filme ID ${id}?`)) {
             return;
@@ -99,7 +99,7 @@ const MovieForm = ({ isEditing = false }) => {
         setLoading(true);
 
         try {
-            const response = await fetch(`/filmes/edicao/${id}`, { // 🚨 DELETE real
+            const response = await fetch(`/filmes/edicao/${id}`, { 
                 method: 'DELETE',
             });
             const result = await response.json();

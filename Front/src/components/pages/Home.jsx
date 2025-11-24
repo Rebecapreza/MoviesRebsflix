@@ -14,12 +14,7 @@ const GENRES = [
   "Ação",
   "Romance",
   "Comédia",
-  "Drama",
-  "Ficção",
-  "Documentário",
-  "Infantil",
-  "Suspense",
-  "Animação",
+  "Drama"
 ];
 // ----------------------------------------
 
