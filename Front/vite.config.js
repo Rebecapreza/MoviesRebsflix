@@ -5,18 +5,22 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // 🚨 AVISO: Certifique-se de que o objeto proxy esteja usando a sintaxe correta do JavaScript/JSON
     proxy: {
-      // Usando aspas duplas (opcional, mas mais seguro) e vírgula após cada par, exceto o último.
-      '/register': 'http://localhost:8000',
-      '/login': 'http://localhost:8000',
-      '/logout': 'http://localhost:8000',
-      '/filmes': 'http://localhost:8000', // Captura /filmes, /filmes/1, /filmes/pending, etc.
+      // 🟢 TUDO que começar com /api vai para o servidor Python
+      '/api': 'http://localhost:8000',
+
+      // Rotas de filmes (que mantivemos sem /api por compatibilidade)
+      '/filmes': 'http://localhost:8000',
+      '/filme': 'http://localhost:8000',
       '/generos': 'http://localhost:8000',
       '/anos': 'http://localhost:8000',
-      // Não deve haver vírgula após a última entrada!
-      // Se houver mais rotas, adicione-as aqui:
-      // '/sua_outra_rota': 'http://localhost:8000' 
+      
+      // Rotas de admin
+      '/pendingcount': 'http://localhost:8000',
+      '/filmespendentes': 'http://localhost:8000',
+      '/aprovarfilme': 'http://localhost:8000',
+      '/deletarfilme': 'http://localhost:8000',
+      '/perfil': 'http://localhost:8000',
     },
   }
 })

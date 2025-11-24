@@ -12,42 +12,41 @@ const Login = () => {
   const [loading, setLoading] = useState(false); // Estado para gerenciar o carregamento
 
   const handleLogin = async (e) => { 
-    e.preventDefault();
+  e.preventDefault();
+  setLoading(true); 
+  setErroLogin(''); 
 
-    setLoading(true); 
-    setErroLogin(''); 
+  try {
+    // 🟢 CORREÇÃO: Adicionado '/api' antes do login
+    const response = await fetch("/api/login", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: usuario, senha: senha }),
+    });
 
-    try {
-      const response = await fetch('/login', { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // CRÍTICO: O backend (Server.py/Auth.py) espera 'password', não 'senha'
-        body: JSON.stringify({ email: usuario, password: senha }), 
-      });
+    const result = await response.json();
 
-      const result = await response.json();
+    if (response.ok) {
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("tipo", result.user.tipo);
+      localStorage.setItem("email", result.user.email);
+      // Se tiver ID no retorno, salve também:
+      if(result.user.id) localStorage.setItem("id", result.user.id);
+      localStorage.setItem("nome", result.user.nome); 
 
-      // CORREÇÃO: O backend retorna o objeto de sessão em caso de sucesso (status 200) e não possui o campo 'status: success'.
-      if (response.ok) { 
-        // Armazena o token para ser usado nas requisições protegidas (Home, CRUD)
-        localStorage.setItem("authToken", result.token); 
-        
-        console.log("Login bem-sucedido:", result); 
-        navigate('/home'); 
-      } else {
-        // Falha na autenticação (erros 400, 401). O backend retorna a mensagem em 'error'.
-        setErroLogin(result.error || 'Email ou senha inválidos.');
-      }
-    } catch (error) {
-      console.error('Erro de rede ou servidor:', error);
-      setErroLogin('Não foi possível conectar ao servidor.');
-    } finally {
-      setLoading(false); 
+      navigate("/home");
+    } else {
+      setErroLogin(result.error || "Email ou senha inválidos.");
     }
-  };
-
+  } catch (error) {
+    console.error(error);
+    setErroLogin("Não foi possível conectar ao servidor.");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="login-page">
       {/* Container visual da esquerda (Fundo Escuro) */}

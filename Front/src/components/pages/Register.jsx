@@ -35,7 +35,7 @@ const Register = () => {
 
     try {
       // 🚨 CONEXÃO REAL COM O BACK-END PYTHON na rota /register
-      const response = await fetch('/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
