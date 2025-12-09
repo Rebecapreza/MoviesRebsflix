@@ -1,65 +1,111 @@
-// src/components/pages/Notifications.jsx
-import React from 'react';
-import './Notifications.css'; // Importe o CSS
-import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';
-
-// Dados Fictícios para Notificações
-const DUMMY_NOTIFICATIONS = [
-    { 
-        id: 1, 
-        tipo: 'aprovacao', 
-        mensagem: 'O seu filme "Midnight Sun" foi aprovado e agora está disponível no catálogo!', 
-        timestamp: '2 horas atrás' 
-    },
-    { 
-        id: 2, 
-        tipo: 'rejeicao', 
-        mensagem: 'Seu filme "A Jornada" foi rejeitado. Verifique os requisitos de poster.', 
-        timestamp: '1 dia atrás' 
-    },
-    { 
-        id: 3, 
-        tipo: 'geral', 
-        mensagem: 'Novas regras de submissão foram publicadas. Leia para evitar rejeições.', 
-        timestamp: '3 dias atrás' 
-    },
-];
-
-// Mapeamento de ícones e cores
-const getNotificationIcon = (tipo) => {
-    switch (tipo) {
-        case 'aprovacao':
-            return { icon: FaCheckCircle, color: '#4CAF50' }; // Verde para sucesso
-        case 'rejeicao':
-            return { icon: FaTimesCircle, color: '#F44336' }; // Vermelho para erro
-        default:
-            return { icon: FaInfoCircle, color: '#2196F3' }; // Azul para informação
-    }
-};
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./Notifications.css";
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaInfoCircle,
+  FaClock,
+} from "react-icons/fa";
 
 const Notifications = () => {
+  const [notificacoes, setNotificacoes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const isAdmin = localStorage.getItem("tipo") === "admin";
+
+  useEffect(() => {
+    const fetchNotificacoes = async () => {
+      if (!isAdmin) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("/filmespendentes", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Transforma os filmes pendentes em formato de notificação
+          const formatado = data.map((filme) => ({
+            id: filme.id_filme,
+            tipo: "pendente",
+            mensagem: `O filme "${filme.titulo}" foi submetido e aguarda aprovação.`,
+            timestamp: "Aguardando análise",
+          }));
+          setNotificacoes(formatado);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar notificações:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotificacoes();
+  }, [isAdmin]);
+
   return (
     <div className="notifications-page">
       <h1>Notificações</h1>
 
-      <div className="notification-list-container">
-        {DUMMY_NOTIFICATIONS.length > 0 ? (
-          DUMMY_NOTIFICATIONS.map(notif => {
-            const { icon: Icon, color } = getNotificationIcon(notif.tipo);
-            return (
-              <div key={notif.id} className="notification-item">
-                <Icon className="notification-icon" style={{ color: color }} />
-                <div className="notification-content">
-                  <p className="notification-message">{notif.mensagem}</p>
-                  <span className="notification-timestamp">{notif.timestamp}</span>
-                </div>
+      {loading ? (
+        <p>Carregando...</p>
+      ) : (
+        <div className="notification-list-container">
+          {!isAdmin && (
+            <div className="notification-item">
+              <FaInfoCircle
+                className="notification-icon"
+                style={{ color: "#2196F3" }}
+              />
+              <div className="notification-content">
+                <p className="notification-message">
+                  Bem-vindo ao Rebsflix! Fique ligado nas novidades.
+                </p>
+                <span className="notification-timestamp">Agora</span>
               </div>
-            );
-          })
-        ) : (
-          <p className="no-notifications">Nenhuma notificação recente.</p>
-        )}
-      </div>
+            </div>
+          )}
+
+          {notificacoes.length > 0
+            ? notificacoes.map((notif) => (
+                <div key={notif.id} className="notification-item">
+                  <FaClock
+                    className="notification-icon"
+                    style={{ color: "#FFC107" }}
+                  />
+                  <div className="notification-content">
+                    <p className="notification-message">{notif.mensagem}</p>
+                    <span className="notification-timestamp">
+                      {notif.timestamp}
+                    </span>
+                    {/* Link rápido para ir ao filme aprovar */}
+                    <Link
+                      to={`/filme/${notif.id}`}
+                      style={{
+                        display: "block",
+                        marginTop: "5px",
+                        color: "#DE467C",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      Ver Detalhes para Aprovar
+                    </Link>
+                  </div>
+                </div>
+              ))
+            : isAdmin && (
+                <p className="no-notifications">
+                  Nenhum filme pendente de aprovação.
+                </p>
+              )}
+        </div>
+      )}
     </div>
   );
 };

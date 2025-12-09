@@ -22,7 +22,7 @@ class Database:
             self.connection = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root", # Verifique se a senha do seu banco está correta
+                password="root", # Verificar senha do MySQL
                 database="filmes"
             )
             if self.connection.is_connected():

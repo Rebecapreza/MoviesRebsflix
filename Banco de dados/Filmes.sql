@@ -147,7 +147,7 @@ INSERT INTO usuarios (nome, email, senha) VALUES
 
 -- Administrador 
 INSERT INTO administradores (email, senha) VALUES
-('administrador@ADM.com', '123456'); 
+('administrador@ADM.com', '1234'); 
 
 -- Paises
 INSERT INTO pais (nome) VALUES
