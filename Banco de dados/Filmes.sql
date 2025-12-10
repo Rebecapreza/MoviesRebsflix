@@ -1,7 +1,7 @@
 -- Criação da base de dados
-DROP DATABASE IF EXISTS Filmes;
-CREATE DATABASE Filmes;
-USE Filmes;
+DROP DATABASE IF EXISTS filmes;
+CREATE DATABASE filmes;
+USE filmes;
 
 -- Tabelas principais
 -- Diretor
@@ -28,16 +28,10 @@ CREATE TABLE pais (
 -- Usuários
 CREATE TABLE usuarios (
     id_user INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR (100) NOT NULL UNIQUE,
-    email VARCHAR (255) NOT NULL UNIQUE,
-    senha VARCHAR (255) NOT NULL
-);
-
--- Administrador
-CREATE TABLE administradores (
-    id_adm INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR (255) NOT NULL UNIQUE,
-    senha VARCHAR (255) NOT NULL
+    nome VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    tipo_usuario ENUM('comum', 'admin') DEFAULT 'comum'
 );
 
 -- Filme
@@ -141,14 +135,6 @@ INSERT INTO generos (generos) VALUES
 ('Comédia'),  
 ('Drama');    
 
--- Usuários 
-INSERT INTO usuarios (nome, email, senha) VALUES
-('Rebeca', 'Rebs@gmail.com', '1234');
-
--- Administrador 
-INSERT INTO administradores (email, senha) VALUES
-('administrador@ADM.com', '1234'); 
-
 -- Paises
 INSERT INTO pais (nome) VALUES
 ('EUA'),          
@@ -156,7 +142,12 @@ INSERT INTO pais (nome) VALUES
 ('Portugal'),     
 ('Reino Unido'),  
 ('Alemanha'),     
-('Espanhol');     
+('Espanhol');  
+
+-- Usuarios
+INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES
+('Rebeca', 'Rebs@gmail.com', '1234', 'comum'),
+('Admin', 'administrador@ADM.com', '1234', 'admin');   
 
 -- Linguagem
 INSERT INTO linguagem (lingua) VALUES
@@ -235,24 +226,24 @@ INSERT INTO filme (titulo, sinopse, poster_url, ano, tp_duracao, orcamento, id_u
 
 -- Filmes de Comédia
 INSERT INTO filme (titulo, sinopse, poster_url, ano, tp_duracao, orcamento, id_user) VALUES
-('Esposa de Mentirinha', 'Um cirurgião plástico solteiro convence sua assistente a fingir ser sua esposa para encobrir uma mentira.', 'https://i.pinimg.com/73x/4b/4e/39/4b4e39db5c7d8c4864d1de5cf37a86da.jpg', '2011', '01:57:00', 80000000.00, 1),
-('Como se Fosse a Primeira Vez', 'Um veterinário se apaixona por uma mulher com perda de memória de curto prazo e precisa conquistá-la todos os dias.', 'https://i.pinimg.com/73x/c4/62/75/c46275ac50d84b8c225e6d6b25c467b4.jpg', '2004', '01:39:00', 75000000.00, 1), 
-('Gente Grande', 'Cinco amigos de infância se reúnem para um feriado de fim de semana na casa do lago após o falecimento de seu treinador de basquete.', 'https://i.pinimg.com/73x/5f/05/0c/5f050c25bb18771b4a30045526e75b08.jpg', '2010', '01:42:00', 80000000.00, 1), 
-('Você Não Tá Convidada Pra o Meu Bat Mitzvá!', 'Duas melhores amigas planejam seus luxuosos Bat Mitzvahs, mas uma rixa causada por um garoto ameaça arruinar tudo.', 'https://i.pinimg.com/73x/89/98/60/8998609c10f2bbc4738f1ecdaf75f3ff.jpg', '2023', '01:43:00', NULL, 1);   
+('Esposa de Mentirinha', 'Um cirurgião plástico solteiro convence sua assistente a fingir ser sua esposa para encobrir uma mentira.', 'https://m.media-amazon.com/images/M/MV5BZjhmZTY5NGQtNDMwNS00OWY3LWJiODItZDMzYjBiNDA5ODNkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', '2011', '01:57:00', 80000000.00, 1),
+('Como se Fosse a Primeira Vez', 'Um veterinário se apaixona por uma mulher com perda de memória de curto prazo e precisa conquistá-la todos os dias.', 'https://i.pinimg.com/736x/ed/48/a1/ed48a1e1cf7c052417611ac99b1be50d.jpg', '2004', '01:39:00', 75000000.00, 1), 
+('Gente Grande', 'Cinco amigos de infância se reúnem para um feriado de fim de semana na casa do lago após o falecimento de seu treinador de basquete.', 'https://i.pinimg.com/736x/b1/4b/95/b14b95148f0d1555f0d6c328c23145f5.jpg', '2010', '01:42:00', 80000000.00, 1), 
+('Você Não Tá Convidada Pra o Meu Bat Mitzvá!', 'Duas melhores amigas planejam seus luxuosos Bat Mitzvahs, mas uma rixa causada por um garoto ameaça arruinar tudo.', 'https://i.pinimg.com/736x/89/98/60/8998609c10f2bbc4738f1ecdaf75f3ff.jpg', '2023', '01:43:00', NULL, 1);   
 
 -- Filmes de Fantasia
 INSERT INTO filme (titulo, sinopse, poster_url, ano, tp_duracao, orcamento, id_user) VALUES
-('Enrolados', 'Uma princesa de longos cabelos dourados é mantida em uma torre por uma velha bruxa, mas sonha em ver as lanternas flutuantes.', 'https://i.pinimg.com/73x/eb/e2/9f/ebe29f22a9007e711f61b507287e0033.jpg', '2010', '01:40:00', 260000000.00, 1), 
+('Enrolados', 'Uma princesa de longos cabelos dourados é mantida em uma torre por uma velha bruxa, mas sonha em ver as lanternas flutuantes.', 'https://i.pinimg.com/1200x/80/3a/d0/803ad097c3c569651bdea9170023821a.jpg', '2010', '01:40:00', 260000000.00, 1), 
 ('Bambi', 'Um jovem cervo aprende sobre a vida na floresta com seus amigos Thumper e Flower.', 'https://i.pinimg.com/1200x/59/1b/14/591b14548e85e54bfeec704356c66131.jpg', '1942', '01:10:00', 858000.00, 1), 
 ('Barbie: Escola de Princesas', 'Barbie descobre que é uma princesa com destino a uma escola mágica onde aprende etiqueta real.', 'https://i.pinimg.com/1200x/80/48/1b/80481b3b0b51f3ee0899142bda008b90.jpg', '2011', '01:23:00', NULL, 1), 
-('O Bom Gigante Amigo', 'Uma menina de 10 anos se torna amiga de um gigante bondoso, que a leva para o País dos Sonhos.', 'https://i.pinimg.com/73x/95/4a/a5/954aa50ea8449583ca7998a696abb026.jpg', '2016', '01:57:00', 140000000.00, 1);
+('O Bom Gigante Amigo', 'Uma menina de 10 anos se torna amiga de um gigante bondoso, que a leva para o País dos Sonhos.', 'https://play-lh.googleusercontent.com/14rir7Q73ZKkVhXFDkhXJVQD17uYnmGQifgf28llXkgOci-MZATP0J-YTIgYy6m6Awg', '2016', '01:57:00', 140000000.00, 1);
 
 -- Filmes de Drama
 INSERT INTO filme (titulo, sinopse, poster_url, ano, tp_duracao, orcamento, id_user) VALUES
 ('A Lista da Minha Vida', 'Uma jovem descobre uma antiga lista de desejos de sua adolescência e decide completá-la após um luto.', 'https://i.pinimg.com/1200x/a4/6c/28/a46c28b6e4abcc120b758f2a6ce27fb5.jpg', '2020', '01:47:00', NULL, 1), 
-('A Cinco Passos de Você', 'Dois jovens com fibrose cística se apaixonam, mas precisam manter uma distância segura um do outro.', 'https://i.pinimg.com/73x/e0/69/ba/e069ba4b74a045184cc6676a503157dc.jpg', '2019', '01:56:00', NULL, 1), 
+('A Cinco Passos de Você', 'Dois jovens com fibrose cística se apaixonam, mas precisam manter uma distância segura um do outro.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRURnEWgaN6U8utdLetIpDWhmM05O0xI98qWA&s', '2019', '01:56:00', NULL, 1), 
 ('Como Eu Era Antes de Você', 'Uma jovem de cidade pequena se torna cuidadora de um homem rico e tetraplégico, e os dois desenvolvem um laço profundo.', 'https://i.pinimg.com/1200x/b0/1f/5b/b01f5b5363bbc4ebdd66ce0e3c8b506e.jpg', '2016', '01:50:00', 20000000.00, 1), 
-('O Sol da Meia Noite', 'Uma adolescente com uma rara doença que a impede de ter contato com a luz solar realiza o sonho de viver um romance.', 'https://i.pinimg.com/73x/dd/d9/c2/ddd9c250c94f650fe1c38b37c34bd133.jpg', '2018', '01:31:00', NULL, 1); 
+('O Sol da Meia Noite', 'Uma adolescente com uma rara doença que a impede de ter contato com a luz solar realiza o sonho de viver um romance.', 'https://upload.wikimedia.org/wikipedia/pt/8/87/Midnight_Sun_2017_%28filme%29.jpg', '2018', '01:31:00', NULL, 1); 
 
 -- Atores
 -- Ação (Missão: Impossível, Vingadores: Ultimato, Batman, Velozes e Furiosos)

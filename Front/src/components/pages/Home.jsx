@@ -7,7 +7,7 @@ import FilterModal from "../organismo/FilterModal";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
-// Componente padrão para todas as listas
+// Componente reutilizável para renderizar listas horizontais
 const MovieList = ({ title, movies }) => (
   <div className="movie-list-section">
     <h2>{title}</h2>
@@ -36,7 +36,7 @@ const Home = () => {
   const [allGenres, setAllGenres] = useState([]);   
   const [loading, setLoading] = useState(true);
 
-  // Busca inicial
+  // 1. Busca inicial
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -91,7 +91,7 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  // Filtros
+  // Lógica de Filtro
   const filteredMovies = moviesData.filter(m => {
     if (searchTerm) {
       return m.titulo.toLowerCase().includes(searchTerm.toLowerCase());
@@ -106,14 +106,14 @@ const Home = () => {
   const isFilteredPage = activeGenre !== null || searchTerm !== "";
 
   // Listas de Categorias
-  const favsCategory = moviesData.slice(0, 5); // Exemplo: 5 primeiros
+  const recentMovies = moviesData.slice(0, 10);
   const actionMovies = moviesData.filter(m => (m.generos_str || "").includes("Ação"));
   const comedyMovies = moviesData.filter(m => (m.generos_str || "").includes("Comédia"));
   const romanceMovies = moviesData.filter(m => (m.generos_str || "").includes("Romance"));
   const horrorMovies = moviesData.filter(m => (m.generos_str || "").includes("Terror"));
 
   if (loading) {
-    return <div className="home" style={{ color: "white", textAlign: "center", marginTop: "50px" }}>Carregando...</div>;
+    return <div className="home" style={{ color: "white", textAlign: "center", marginTop: "50px" }}>Carregando catálogo...</div>;
   }
 
   return (
@@ -173,9 +173,9 @@ const Home = () => {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {/* 🟢 AGORA PADRONIZADO: Favs do momento usa MovieList */}
-            {favsCategory.length > 0 && (
-              <MovieList title="Favs do momento" movies={favsCategory} />
+            {/* 🟢 TODAS AS LISTAS AGORA SÃO IGUAIS (MovieList) */}
+            {recentMovies.length > 0 && (
+              <MovieList title="Adicionados Recentemente" movies={recentMovies} />
             )}
             
             {actionMovies.length > 0 && <MovieList title="Ação e Aventura" movies={actionMovies} />}

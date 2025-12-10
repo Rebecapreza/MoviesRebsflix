@@ -8,17 +8,13 @@
     overflow-y: auto; 
     overflow-x: hidden;
     color: white;
+    scrollbar-width: none; 
 }
 
-/* Esconde barra de rolagem (reutilizando solução da Home) */
 .notifications-page::-webkit-scrollbar {
     width: 0; 
     height: 0;
 }
-.notifications-page {
-    scrollbar-width: none; 
-}
-
 
 .notifications-page h1 {
     font-size: 2rem;
@@ -29,7 +25,7 @@
 
 .notification-list-container {
     width: 100%;
-    max-width: 800px; /* Limita a largura da lista */
+    max-width: 800px; 
 }
 
 .notification-item {
@@ -37,21 +33,21 @@
     align-items: flex-start;
     padding: 20px;
     margin-bottom: 15px;
-    background-color: #1c2a3a; /* Fundo do item de notificação */
+    background-color: #1c2a3a; 
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    border-left: 5px solid transparent; /* Adiciona uma borda colorida se necessário */
     transition: background-color 0.3s;
 }
 
 .notification-item:hover {
-    background-color: #253B4F; /* Levemente mais claro no hover */
+    background-color: #253B4F; 
 }
 
 .notification-icon {
     font-size: 1.5rem;
     margin-right: 15px;
-    flex-shrink: 0; /* Impede o ícone de encolher */
+    flex-shrink: 0; 
+    margin-top: 3px;
 }
 
 .notification-content {
@@ -68,6 +64,54 @@
 .notification-timestamp {
     font-size: 0.8rem;
     color: #a0a0a0;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.details-link {
+    color: #DE467C;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.details-link:hover {
+    text-decoration: underline;
+}
+
+/* --- Novos Estilos: Botões de Ação --- */
+.notification-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    color: white;
+}
+
+.btn-action:hover {
+    opacity: 0.8;
+}
+
+.btn-approve {
+    background-color: #4CAF50; /* Verde */
+}
+
+.btn-reject {
+    background-color: #F44336; /* Vermelho */
 }
 
 .no-notifications {

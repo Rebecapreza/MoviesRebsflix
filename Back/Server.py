@@ -8,9 +8,11 @@ from decimal import Decimal
 import bcrypt
 import jwt
 
-SECRET_KEY = "1234"
+SECRET_KEY = "123456"
 
+# ============================================================================
 # CLASSE DATABASE
+# ============================================================================
 class Database:
     def __init__(self):
         self.connection = None
@@ -21,13 +23,13 @@ class Database:
             self.connection = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root", # Conferir senha do MySQL 
+                password="root", # CONFIRA SUA SENHA
                 database="filmes"
             )
             if self.connection.is_connected():
-                print("Conectado ao MySQL com sucesso.")
+                print("✅ Conectado ao MySQL com sucesso.")
         except Error as e:
-            print(f"Erro ao conectar ao MySQL: {e}")
+            print(f"❌ Erro ao conectar ao MySQL: {e}")
 
     def _get_connection(self):
         if not self.connection or not self.connection.is_connected():
@@ -165,7 +167,11 @@ class Database:
                 mins = int(duracao_str)
                 duracao_fmt = f"{mins//60:02}:{mins%60:02}:00"
             else: duracao_fmt = "01:30:00"
+            
+            # Ajuste: se quiser que todos os filmes entrem como aprovado direto, descomente a linha abaixo
+            # status = 'aprovado' 
             status = 'aprovado' if is_admin else 'pendente'
+
             query_filme = "INSERT INTO filme (titulo, sinopse, poster_url, ano, tp_duracao, id_user, status) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(query_filme, (titulo, sinopse, poster, ano, duracao_fmt, user_id, status))
             id_filme = cursor.lastrowid
@@ -180,24 +186,53 @@ class Database:
             if self.connection: self.connection.rollback()
             return None
 
+    # 🟢 CORREÇÃO: Função update_movie agora trata duração e gêneros corretamente
     def update_movie(self, movie_id, data):
         try:
             cursor = self._get_connection().cursor()
             fields = []
             params = []
+            
             if 'titulo' in data: fields.append("titulo=%s"); params.append(data['titulo'])
             if 'ano' in data: fields.append("ano=%s"); params.append(data['ano'])
             if 'poster_url' in data: fields.append("poster_url=%s"); params.append(data['poster_url'])
-            if 'duracao' in data: fields.append("tp_duracao=%s"); params.append(data['duracao'])
             if 'orcamento' in data: fields.append("orcamento=%s"); params.append(data['orcamento'])
             if 'sinopse' in data: fields.append("sinopse=%s"); params.append(data['sinopse'])
-            if not fields: return False
-            params.append(movie_id)
-            sql = f"UPDATE filme SET {', '.join(fields)} WHERE id_filme=%s"
-            cursor.execute(sql, params)
+            
+            # Tratamento da Duração (Minutos -> TIME)
+            if 'duracao' in data:
+                duracao_str = str(data['duracao'])
+                if duracao_str.isdigit():
+                    mins = int(duracao_str)
+                    duracao_fmt = f"{mins//60:02}:{mins%60:02}:00"
+                elif ':' in duracao_str: 
+                    duracao_fmt = duracao_str
+                else:
+                    duracao_fmt = "01:30:00"
+                
+                fields.append("tp_duracao=%s")
+                params.append(duracao_fmt)
+            
+            # Executa update da tabela filme
+            if fields:
+                query = f"UPDATE filme SET {', '.join(fields)} WHERE id_filme=%s"
+                params.append(movie_id)
+                cursor.execute(query, params)
+
+            # Atualização de Gêneros (Remove antigos e insere novos)
+            if 'genero' in data:
+                cursor.execute("DELETE FROM generos_filme WHERE id_filme = %s", (movie_id,))
+                if data['genero']:
+                    generos = [g.strip() for g in data['genero'].split(',')]
+                    for g_nome in generos:
+                        id_g = self.get_or_create_id(cursor, 'generos', 'generos', g_nome)
+                        if id_g: cursor.execute("INSERT INTO generos_filme (id_filme, id_generos) VALUES (%s, %s)", (movie_id, id_g))
+
             self.connection.commit()
-            return cursor.rowcount > 0
-        except Error: return False
+            return True
+        except Error as e:
+            print(f"Erro update_movie: {e}")
+            return False
 
     def delete_movie(self, movie_id):
         try:
@@ -230,7 +265,9 @@ class Database:
             return cursor.rowcount > 0
         except Error: return False
 
+# ============================================================================
 # CLASSE AUTH
+# ============================================================================
 class Auth:
     def __init__(self, database):
         self.db = database
@@ -240,13 +277,10 @@ class Auth:
 
     def verify_password(self, password, stored_value):
         try:
-            # 1. Tenta verificar como Hash Bcrypt padrão
             password_bytes = password.encode("utf-8") if isinstance(password, str) else password
             stored_bytes = stored_value.encode("utf-8") if isinstance(stored_value, str) else stored_value
             return bcrypt.checkpw(password_bytes, stored_bytes)
         except (ValueError, Exception):
-            # 2. Se falhar (ex: "Invalid Salt" pq é texto puro), compara direto
-            print(f"Aviso: Senha no banco não é hash válido. Tentando comparação simples.")
             return password == stored_value
 
     def handle_login(self, body):
@@ -258,7 +292,6 @@ class Auth:
 
             user = self.db.get_user_by_email(email)
             if user:
-                # Verifica a senha (hash ou texto puro)
                 if self.verify_password(senha, user["senha"]):
                     tipo = user.get("tipo_usuario", "comum")
                     token = self.generate_token(user["id_user"], tipo)
@@ -280,7 +313,6 @@ class Auth:
             if not nome or not email or not senha: return 400, {"error": "Dados incompletos"}
             if self.db.get_user_by_email(email): return 409, {"error": "Email já cadastrado"}
 
-            # No registro, salvamos como hash seguro
             hashed = self.hash_password(senha)
             if self.db.create_user(nome, email, hashed, 'comum'):
                 return 201, {"message": "Sucesso"}
@@ -304,7 +336,9 @@ class Auth:
         try: return jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         except: return None
 
+# ============================================================================
 # CLASSE SERVER
+# ============================================================================
 db = Database()
 auth = Auth(db)
 
@@ -422,7 +456,7 @@ class Server(BaseHTTPRequestHandler):
 def run():
     server_addr = ('localhost', 8000)
     httpd = HTTPServer(server_addr, Server)
-    print(" Servidor rodando em http://localhost:8000")
+    print("🔥 Servidor rodando em http://localhost:8000")
     httpd.serve_forever()
 
 if __name__ == "__main__":
