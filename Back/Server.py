@@ -9,7 +9,7 @@ import bcrypt
 import jwt
 
 # --- CONFIGURAÇÕES ---
-SECRET_KEY = "123456"
+SECRET_KEY = "1234"
 
 # CLASSE DATABASE
 class Database:
@@ -26,9 +26,9 @@ class Database:
                 database="filmes"
             )
             if self.connection.is_connected():
-                print("✅ Conectado ao MySQL com sucesso.")
+                print("Conectado ao MySQL com sucesso.")
         except Error as e:
-            print(f"❌ Erro ao conectar ao MySQL: {e}")
+            print(f" Erro ao conectar ao MySQL: {e}")
 
     def _get_connection(self):
         """Garante que a conexão está ativa, reconectando se necessário"""
