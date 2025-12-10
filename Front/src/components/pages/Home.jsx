@@ -26,43 +26,22 @@ const MovieList = ({ title, movies }) => (
   </div>
 );
 
-// Componente para renderizar a lista Top 3
-const Top3List = ({ title, movies }) => (
-  <div className="movie-list-section top-3-section">
-    <h2>{title}</h2>
-    <div className="movie-list-container top-3-container">
-      {movies.slice(0, 3).map((movie, index) => (
-        <MovieCard
-          key={movie.id_filme}
-          id={movie.id_filme}
-          titulo={movie.titulo}
-          posterUrl={movie.poster}
-          ano={movie.ano}
-          duracao={movie.duracao_str || movie.duracao || "N/A"}
-          rank={index + 1}
-        />
-      ))}
-    </div>
-  </div>
-);
-
 const Home = () => {
   const navigate = useNavigate();
   const [activeGenre, setActiveGenre] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); 
   
-  // Estados de dados
   const [moviesData, setMoviesData] = useState([]); 
   const [allGenres, setAllGenres] = useState([]);   
   const [loading, setLoading] = useState(true);
 
-  // 1. Busca inicial de TODOS os filmes para extrair Gêneros e montar a Home padrão
+  // 1. Busca inicial
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         const token = localStorage.getItem("token"); 
         
-        // Busca todos os filmes 
         const response = await fetch('/filmes', {
           headers: { 'Authorization': token ? `Bearer ${token}` : "" },
         });
@@ -93,9 +72,14 @@ const Home = () => {
     fetchInitialData();
   }, [navigate]);
 
-  // 2. Lógica de Filtro 
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (term) setActiveGenre(null);
+  };
+
   const handleGenreClick = (genre) => {
     setActiveGenre(activeGenre === genre ? null : genre);
+    setSearchTerm("");
   };
 
   const handleOpenModal = () => {
@@ -107,24 +91,27 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  // Aplica o filtro de gênero nos filmes
-  const filteredMovies = activeGenre && activeGenre !== "Geral"
-    ? moviesData.filter(m => {
-        const g = m.generos_str || m.genero || "";
-        return g.includes(activeGenre);
-      })
-    : moviesData;
+  // Lógica de Filtro
+  const filteredMovies = moviesData.filter(m => {
+    if (searchTerm) {
+      return m.titulo.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+    if (activeGenre && activeGenre !== "Geral") {
+      const g = m.generos_str || m.genero || "";
+      return g.includes(activeGenre);
+    }
+    return true; 
+  });
 
-  // 1. Recentes: Os primeiros 10 filmes 
-  const recentMovies = moviesData.slice(0, 10);
+  const isFilteredPage = activeGenre !== null || searchTerm !== "";
 
-  // 2. Categorias Específicas 
+  // Definição das Listas (Categorias)
+  // 'recentMovies' agora usa a mesma lógica das outras listas
+  const recentMovies = moviesData.slice(0, 10); 
   const actionMovies = moviesData.filter(m => (m.generos_str || "").includes("Ação"));
   const comedyMovies = moviesData.filter(m => (m.generos_str || "").includes("Comédia"));
   const romanceMovies = moviesData.filter(m => (m.generos_str || "").includes("Romance"));
   const horrorMovies = moviesData.filter(m => (m.generos_str || "").includes("Terror"));
-
-  const isFilteredPage = activeGenre !== null;
 
   if (loading) {
     return <div className="home" style={{ color: "white", textAlign: "center", marginTop: "50px" }}>Carregando catálogo...</div>;
@@ -133,16 +120,14 @@ const Home = () => {
   return (
     <div className="home">
       <div className="home-header">
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
       </div>
 
       <Carousel />
 
-      {/* Navegação por Gênero */}
       <div className="genre-navigation">
         <h2 className="section-title">Navegar por gênero</h2>
         <div className="genre-tags">
-          {/* Mapeia os gêneros que existem no banco */}
           {allGenres.map((genre) => (
             <button
               key={genre}
@@ -162,13 +147,13 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Conteúdo Principal */}
       <div className="content-scroll">
         {isFilteredPage ? (
           // VISUALIZAÇÃO FILTRADA (GRID)
           <React.Fragment>
             <h2 className="section-title">
-              {activeGenre === "Geral" ? "Filtros Avançados" : `Gênero: ${activeGenre}`}
+              {searchTerm ? `Resultados para: "${searchTerm}"` : 
+               activeGenre === "Geral" ? "Filtros Avançados" : `Gênero: ${activeGenre}`}
             </h2>
             <div className="movie-grid-filtered">
               {filteredMovies.map((movie) => (
@@ -182,26 +167,28 @@ const Home = () => {
                 />
               ))}
               {filteredMovies.length === 0 && (
-                <p className="no-results">Nenhum filme encontrado.</p>
+                <p className="no-results" style={{ width: '100%', textAlign: 'center', color: '#888' }}>
+                    Nenhum filme encontrado.
+                </p>
               )}
             </div>
           </React.Fragment>
         ) : (
+          // VISUALIZAÇÃO PADRÃO (CATEGORIAS)
           <React.Fragment>
+            {/* 🔴 AQUI ESTAVA O ERRO: Removemos o Top3List e usamos MovieList */}
             {recentMovies.length > 0 && (
-              <Top3List title="Adicionados Recentemente" movies={recentMovies} />
+              <MovieList title="Adicionados Recentemente" movies={recentMovies} />
             )}
-
-            {/* Listas por Gênero (Só aparecem se tiver filme) */}
+            
             {actionMovies.length > 0 && <MovieList title="Ação e Aventura" movies={actionMovies} />}
             {comedyMovies.length > 0 && <MovieList title="Comédias" movies={comedyMovies} />}
             {romanceMovies.length > 0 && <MovieList title="Romance e Drama" movies={romanceMovies} />}
             {horrorMovies.length > 0 && <MovieList title="Terror e Suspense" movies={horrorMovies} />}
             
-            {/* Fallback se o banco estiver vazio */}
             {moviesData.length === 0 && (
                 <p style={{textAlign: 'center', marginTop: '20px', color: '#666'}}>
-                    O catálogo está vazio. Adicione filmes pelo menu "Cadastrar novo filme".
+                    O catálogo está vazio.
                 </p>
             )}
           </React.Fragment>

@@ -6,19 +6,17 @@ import rebsflixTitleAzul from '../../assets/nome rebsflix azul.png';
 import './Register.css'; 
 
 const Register = () => {
-  const navigate = useNavigate(); // Hook para navegação
-  const [nome, setNome] = useState(''); // Estado para armazenar o nome de usuário
-  const [email, setEmail] = useState(''); // Estado para armazenar o e-mail
-  const [senha, setSenha] = useState(''); // Estado para armazenar a senha
+  const navigate = useNavigate();
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState(''); 
-  const [erroCadastro, setErroCadastro] = useState(''); // Estado para mensagens de erro
-  const [loading, setLoading] = useState(false); // Novo estado para simular carregamento
+  const [erroCadastro, setErroCadastro] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Função que será chamada quando o formulário for enviado
   const handleCadastro = async (e) => {
     e.preventDefault();
 
-    // Validação inicial do lado do cliente
     if (!nome || !email || !senha || !confirmarSenha) {
       setErroCadastro('Por favor, preencha todos os campos.');
       return;
@@ -29,8 +27,8 @@ const Register = () => {
       return;
     }
 
-    setLoading(true); 
-    setErroCadastro(''); 
+    setLoading(true);
+    setErroCadastro('');
 
     try {
       const response = await fetch('/api/register', {
@@ -44,16 +42,13 @@ const Register = () => {
       const result = await response.json();
 
       if (response.ok && result.status === 'success') {
-        // Sucesso no cadastro
         console.log("Cadastro bem-sucedido:", result.message); 
-        navigate('/'); // Redireciona para o login
+        navigate('/'); 
       } else {
-        // Falha 
         setErroCadastro(result.message || 'Erro desconhecido ao cadastrar.');
       }
 
     } catch (error) {
-      // Erro de rede ou servidor
       console.error('Erro de rede ou servidor:', error);
       setErroCadastro('Não foi possível conectar ao servidor. Verifique o console.');
     } finally {
@@ -108,7 +103,6 @@ const Register = () => {
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
 
-          {/* Exibe a mensagem de erro, se houver */}
           {erroCadastro && <p className="error-message">{erroCadastro}</p>}
 
           <button type="submit" className="register-button" disabled={loading}>
