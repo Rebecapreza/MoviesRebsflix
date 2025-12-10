@@ -2,10 +2,10 @@
     display: block;
     position: relative;
     
-    /* 🟢 TORNA O CARD FLUIDO E COM PROPORÇÃO FIXA */
-    width: 100%; /* Ocupa a largura que o pai definir */
-    height: auto; /* Altura automática */
-    aspect-ratio: 2 / 3; /* Proporção padrão de poster (ex: 200x300) */
+    /* 🟢 PADRONIZAÇÃO: Remove altura fixa e usa proporção de pôster (2:3) */
+    width: 100%; 
+    height: auto; 
+    aspect-ratio: 2 / 3; 
     
     border-radius: 8px;
     overflow: hidden;
@@ -17,15 +17,21 @@
     background-color: #0a141d;
 }
 
+/* Removemos estilos especiais de rank que alteravam o tamanho */
+.movie-card-wrapper.has-rank {
+    background-color: transparent;
+    box-shadow: none;
+}
+
 .movie-poster {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Garante que a imagem preencha sem distorcer */
+    object-fit: cover;
     border-radius: 8px;
     transition: opacity 0.3s ease;
 }
 
-/* --- Hover Content --- */
+/* Hover Content */
 .movie-card-hover-content {
     position: absolute;
     bottom: 0;
@@ -58,7 +64,6 @@
     z-index: 2;
 }
 
-/* Títulos e detalhes do hover */
 .movie-card-hover-content .hover-title {
     font-size: 1rem;
     font-weight: bold;

@@ -7,7 +7,7 @@ import FilterModal from "../organismo/FilterModal";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
-// Componente reutilizável para renderizar listas horizontais
+// Componente padrão para todas as listas
 const MovieList = ({ title, movies }) => (
   <div className="movie-list-section">
     <h2>{title}</h2>
@@ -36,7 +36,7 @@ const Home = () => {
   const [allGenres, setAllGenres] = useState([]);   
   const [loading, setLoading] = useState(true);
 
-  // 1. Busca inicial
+  // Busca inicial
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -91,7 +91,7 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  // Lógica de Filtro
+  // Filtros
   const filteredMovies = moviesData.filter(m => {
     if (searchTerm) {
       return m.titulo.toLowerCase().includes(searchTerm.toLowerCase());
@@ -105,16 +105,15 @@ const Home = () => {
 
   const isFilteredPage = activeGenre !== null || searchTerm !== "";
 
-  // Definição das Listas (Categorias)
-  // 'recentMovies' agora usa a mesma lógica das outras listas
-  const recentMovies = moviesData.slice(0, 10); 
+  // Listas de Categorias
+  const favsCategory = moviesData.slice(0, 5); // Exemplo: 5 primeiros
   const actionMovies = moviesData.filter(m => (m.generos_str || "").includes("Ação"));
   const comedyMovies = moviesData.filter(m => (m.generos_str || "").includes("Comédia"));
   const romanceMovies = moviesData.filter(m => (m.generos_str || "").includes("Romance"));
   const horrorMovies = moviesData.filter(m => (m.generos_str || "").includes("Terror"));
 
   if (loading) {
-    return <div className="home" style={{ color: "white", textAlign: "center", marginTop: "50px" }}>Carregando catálogo...</div>;
+    return <div className="home" style={{ color: "white", textAlign: "center", marginTop: "50px" }}>Carregando...</div>;
   }
 
   return (
@@ -149,7 +148,6 @@ const Home = () => {
 
       <div className="content-scroll">
         {isFilteredPage ? (
-          // VISUALIZAÇÃO FILTRADA (GRID)
           <React.Fragment>
             <h2 className="section-title">
               {searchTerm ? `Resultados para: "${searchTerm}"` : 
@@ -174,11 +172,10 @@ const Home = () => {
             </div>
           </React.Fragment>
         ) : (
-          // VISUALIZAÇÃO PADRÃO (CATEGORIAS)
           <React.Fragment>
-            {/* 🔴 AQUI ESTAVA O ERRO: Removemos o Top3List e usamos MovieList */}
-            {recentMovies.length > 0 && (
-              <MovieList title="Adicionados Recentemente" movies={recentMovies} />
+            {/* 🟢 AGORA PADRONIZADO: Favs do momento usa MovieList */}
+            {favsCategory.length > 0 && (
+              <MovieList title="Favs do momento" movies={favsCategory} />
             )}
             
             {actionMovies.length > 0 && <MovieList title="Ação e Aventura" movies={actionMovies} />}
